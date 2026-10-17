@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0f1115">
+<title>Mr Pono Tech · Voice Over</title>
+<style>
+  :root {
+    --bg: #0f1115; --card: #181b21; --line: #2a2f38;
+    --text: #eef0f3; --muted: #98a0ab;
+    --accent: #f5b301; --accent-ink: #1a1400; --danger: #ff6b6b; --ok: #5ad19a;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; padding: 20px 16px 48px; }
+  h1 { font-size: 1.35rem; margin: 4px 0 2px; letter-spacing: .2px; }
+  h1 span { color: var(--accent); }
+  .sub { color: var(--muted); font-size: .9rem; margin: 0 0 18px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px; margin-bottom: 14px; }
+  label { display: block; font-size: .85rem; color: var(--muted); margin: 0 0 6px; }
+  textarea, select, input[type=password] {
+    width: 100%; background: #0f1218; color: var(--text);
+    border: 1px solid var(--line); border-radius: 10px; padding: 12px; font: inherit;
+  }
+  textarea { min-height: 220px; resize: vertical; line-height: 1.55; }
+  textarea:focus, select:focus, input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .meta { display: flex; justify-content: space-between; color: var(--muted); font-size: .8rem; margin-top: 6px; }
+  .grid { display: grid; gap: 14px; }
+  .slider-top { display: flex; justify-content: space-between; align-items: baseline; }
+  .slider-top b { color: var(--text); font-weight: 600; font-size: .85rem; }
+  input[type=range] { width: 100%; accent-color: var(--accent); height: 28px; }
+  details summary { cursor: pointer; color: var(--muted); font-size: .85rem; }
+  details[open] summary { margin-bottom: 10px; }
+  .row { display: flex; gap: 10px; }
+  button {
+    font: inherit; font-weight: 600; border-radius: 12px; border: 1px solid var(--line);
+    background: #232832; color: var(--text); padding: 14px 16px; cursor: pointer; min-height: 48px;
+  }
+  button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); flex: 1; }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  .bar { height: 8px; background: #232832; border-radius: 99px; overflow: hidden; margin: 12px 0 8px; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .25s; }
+  .status { font-size: .9rem; color: var(--muted); min-height: 1.4em; }
+  .status.err { color: var(--danger); }
+  .status.ok { color: var(--ok); }
+  audio { width: 100%; margin: 4px 0 12px; }
+  a.dl {
+    display: block; text-align: center; text-decoration: none; background: var(--accent); color: var(--accent-ink);
+    font-weight: 700; padding: 14px; border-radius: 12px;
+  }
+  [hidden] { display: none !important; }
+  .foot { color: var(--muted); font-size: .78rem; text-align: center; margin-top: 18px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Mr Pono Tech <span>· Voice Over</span></h1>
+  <p class="sub">Tempel naskah, pilih suara, unduh MP3. Naskah panjang dipecah per paragraf dan digabung otomatis.</p>
+
+  <div class="card">
+    <label for="naskah">Naskah</label>
+    <textarea id="naskah" placeholder="Tempel naskah di sini. Satu paragraf per baris."></textarea>
+    <div class="meta"><span id="hitung">0 karakter · 0 potongan</span><span>Tiap baris = satu potongan</span></div>
+  </div>
+
+  <div class="card grid">
+    <div>
+      <label for="suara">Suara</label>
+      <select id="suara">
+        <optgroup label="Indonesia">
+          <option value="id-ID-ArdiNeural">Ardi (pria)</option>
+          <option value="id-ID-GadisNeural">Gadis (wanita)</option>
+        </optgroup>
+        <optgroup label="English">
+          <option value="en-US-AndrewNeural">Andrew (US, pria)</option>
+          <option value="en-US-GuyNeural">Guy (US, pria)</option>
+          <option value="en-US-AriaNeural">Aria (US, wanita)</option>
+          <option value="en-US-JennyNeural">Jenny (US, wanita)</option>
+          <option value="en-GB-RyanNeural">Ryan (UK, pria)</option>
+          <option value="en-GB-SoniaNeural">Sonia (UK, wanita)</option>
+        </optgroup>
+      </select>
+    </div>
+    <div>
+      <div class="slider-top"><label for="rate">Kecepatan</label><b id="rateV">+0%</b></div>
+      <input id="rate" type="range" min="-50" max="50" step="5" value="0">
+    </div>
+    <div>
+      <div class="slider-top"><label for="pitch">Nada</label><b id="pitchV">+0 Hz</b></div>
+      <input id="pitch" type="range" min="-30" max="30" step="2" value="0">
+    </div>
+    <div>
+      <div class="slider-top"><label for="jeda">Jeda antar paragraf</label><b id="jedaV">0,4 dtk</b></div>
+      <input id="jeda" type="range" min="0" max="1600" step="100" value="400">
+    </div>
+    <details>
+      <summary>Kode akses (opsional)</summary>
+      <input id="kode" type="password" placeholder="Isi jika Anda memasang ACCESS_CODE" autocomplete="off">
+    </details>
+  </div>
+
+  <div class="row">
+    <button id="tes">Tes suara</button>
+    <button id="buat" class="primary">Buat MP3</button>
+    <button id="batal" hidden>Batal</button>
+  </div>
+
+  <div class="bar" id="barWrap" hidden><i id="bar"></i></div>
+  <div class="status" id="status"></div>
+
+  <div class="card" id="hasil" hidden style="margin-top:14px">
+    <audio id="pemutar" controls></audio>
+    <a id="unduh" class="dl" download="voice-over.mp3">Unduh MP3</a>
+  </div>
+
+  <p class="foot">Suara: Microsoft Edge TTS. Gunakan untuk konten Anda sendiri.</p>
+</div>
+
+<script>
+const MAKS = 1200;                    // karakter per permintaan
+const SENYAP_B64 = "//NkxAAAAANIAAAAAExBTUVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NkxHwAAANIAAAAAFVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NkxHwAAANIAAAAAFVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NkxHwAAANIAAAAAFVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NkxHwAAANIAAAAAFVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NkxHwAAANIAAAAAFVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NkxHwAAANIAAAAAFVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NkxHwAAANIAAAAAFVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NkxHwAAANIAAAAAFVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NkxHwAAANIAAAAAFVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NkxHwAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV"; // ~0,26 dtk MP3 hening 24 kHz mono
+const SENYAP_DTK = 0.264;
+
+const $ = (id) => document.getElementById(id);
+const el = {
+  naskah: $('naskah'), hitung: $('hitung'), suara: $('suara'),
+  rate: $('rate'), rateV: $('rateV'), pitch: $('pitch'), pitchV: $('pitchV'),
+  jeda: $('jeda'), jedaV: $('jedaV'), kode: $('kode'),
+  tes: $('tes'), buat: $('buat'), batal: $('batal'),
+  barWrap: $('barWrap'), bar: $('bar'), status: $('status'),
+  hasil: $('hasil'), pemutar: $('pemutar'), unduh: $('unduh'),
+};
+
+const cache = new Map();   // potongan yang sudah jadi (untuk lanjut jika gagal di tengah)
+let kontrol = null;        // AbortController
+let urlAudio = null;
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const tanda = (n) => (n >= 0 ? '+' : '') + n;
+
+// ---- simpan pengaturan ----
+const KEYS = ['naskah', 'suara', 'rate', 'pitch', 'jeda', 'kode'];
+function simpan() {
+  try { KEYS.forEach((k) => localStorage.setItem('vo_' + k, el[k].value)); } catch (e) {}
+}
+function muat() {
+  try {
+    KEYS.forEach((k) => {
+      const v = localStorage.getItem('vo_' + k);
+      if (v !== null) el[k].value = v;
+    });
+  } catch (e) {}
+}
+
+// ---- pecah naskah ----
+function pecah(teks) {
+  const hasil = [];
+  for (const p of teks.split(/\n+/).map((x) => x.trim()).filter(Boolean)) {
+    if (p.length <= MAKS) { hasil.push(p); continue; }
+    let buf = '';
+    for (const k of p.split(/(?<=[.!?])\s+/)) {
+      if (buf && buf.length + k.length + 1 > MAKS) { hasil.push(buf); buf = k; }
+      else { buf = (buf + ' ' + k).trim(); }
+    }
+    if (buf) hasil.push(buf);
+  }
+  // kalimat tunggal yang masih terlalu panjang: potong paksa di spasi
+  return hasil.flatMap((t) => {
+    if (t.length <= MAKS) return [t];
+    const out = []; let sisa = t;
+    while (sisa.length > MAKS) {
+      let i = sisa.lastIndexOf(' ', MAKS);
+      if (i < MAKS / 2) i = MAKS;
+      out.push(sisa.slice(0, i).trim()); sisa = sisa.slice(i).trim();
+    }
+    if (sisa) out.push(sisa);
+    return out;
+  });
+}
+
+function perbarui() {
+  const n = el.naskah.value.length;
+  el.hitung.textContent = `${n.toLocaleString('id-ID')} karakter · ${pecah(el.naskah.value).length} potongan`;
+  el.rateV.textContent = tanda(+el.rate.value) + '%';
+  el.pitchV.textContent = tanda(+el.pitch.value) + ' Hz';
+  el.jedaV.textContent = (el.jeda.value / 1000).toLocaleString('id-ID') + ' dtk';
+  simpan();
+}
+
+function status(teks, jenis) {
+  el.status.textContent = teks;
+  el.status.className = 'status' + (jenis ? ' ' + jenis : '');
+}
+
+class Fatal extends Error { constructor(m) { super(m); this.fatal = true; } }
+
+// ---- ambil audio satu potongan ----
+async function ambil(teks, opsi, signal) {
+  const kunci = [opsi.voice, opsi.rate, opsi.pitch, teks].join('|');
+  if (cache.has(kunci)) return cache.get(kunci);
+  let galat = 'gagal';
+  for (let i = 0; i < 3; i++) {
+    try {
+      const r = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-access-code': el.kode.value },
+        body: JSON.stringify({ text: teks, ...opsi }),
+        signal,
+      });
+      if (r.ok) {
+        const buf = new Uint8Array(await r.arrayBuffer());
+        if (buf.length > 0) { cache.set(kunci, buf); return buf; }
+        galat = 'audio kosong';
+      } else {
+        const j = await r.json().catch(() => ({}));
+        galat = j.error || 'kesalahan server (' + r.status + ')';
+        if (r.status === 400 || r.status === 401 || r.status === 404) throw new Fatal(galat);
+      }
+    } catch (e) {
+      if (e.name === 'AbortError' || e.fatal) throw e;
+      galat = e.message;
+    }
+    await sleep(1500 * (i + 1));
+  }
+  throw new Error(galat);
+}
+
+function senyap() {
+  const b = atob(SENYAP_B64);
+  const u = new Uint8Array(b.length);
+  for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i);
+  return u;
+}
+
+function gabung(bagian, jedaMs) {
+  const ulang = Math.round((jedaMs / 1000) / SENYAP_DTK);
+  const hening = senyap();
+  const susunan = [];
+  bagian.forEach((b, i) => {
+    susunan.push(b);
+    if (i < bagian.length - 1) for (let k = 0; k < ulang; k++) susunan.push(hening);
+  });
+  return new Blob(susunan, { type: 'audio/mpeg' });
+}
+
+function mulai(sibuk) {
+  el.buat.disabled = sibuk; el.tes.disabled = sibuk;
+  el.batal.hidden = !sibuk;
+  el.barWrap.hidden = !sibuk;
+  if (!sibuk) el.bar.style.width = '0';
+}
+
+function tampilkan(blob, nama) {
+  if (urlAudio) URL.revokeObjectURL(urlAudio);
+  urlAudio = URL.createObjectURL(blob);
+  el.pemutar.src = urlAudio;
+  el.unduh.href = urlAudio;
+  el.unduh.download = nama;
+  el.unduh.textContent = `Unduh MP3 (${(blob.size / 1048576).toFixed(2)} MB)`;
+  el.hasil.hidden = false;
+}
+
+async function jalankan(teks, nama) {
+  const bagian = pecah(teks);
+  if (!bagian.length) { status('Naskah masih kosong.', 'err'); return; }
+  const opsi = {
+    voice: el.suara.value,
+    rate: tanda(+el.rate.value) + '%',
+    pitch: tanda(+el.pitch.value) + 'Hz',
+  };
+  kontrol = new AbortController();
+  mulai(true); el.hasil.hidden = true;
+  const audio = [];
+  try {
+    for (let i = 0; i < bagian.length; i++) {
+      status(`Membuat suara ${i + 1} dari ${bagian.length}...`);
+      audio.push(await ambil(bagian[i], opsi, kontrol.signal));
+      el.bar.style.width = ((i + 1) / bagian.length * 100) + '%';
+    }
+    const blob = gabung(audio, +el.jeda.value);
+    tampilkan(blob, nama);
+    status(`Selesai: ${bagian.length} potongan digabung.`, 'ok');
+  } catch (e) {
+    if (e.name === 'AbortError') status('Dibatalkan. Potongan yang sudah jadi tersimpan, tekan lagi untuk melanjutkan.');
+    else status(`Gagal: ${e.message}. Tekan tombol lagi untuk melanjutkan dari potongan yang tersisa.`, 'err');
+  } finally {
+    kontrol = null; mulai(false);
+  }
+}
+
+el.buat.addEventListener('click', () => {
+  const stempel = new Date().toISOString().slice(0, 16).replace(/[-:T]/g, '');
+  jalankan(el.naskah.value, `voice-over-${stempel}.mp3`);
+});
+el.tes.addEventListener('click', () => {
+  const awal = pecah(el.naskah.value)[0] || '';
+  jalankan(awal.slice(0, 160), 'tes-suara.mp3');
+});
+el.batal.addEventListener('click', () => kontrol && kontrol.abort());
+['input', 'change'].forEach((ev) => {
+  [el.naskah, el.suara, el.rate, el.pitch, el.jeda, el.kode].forEach((x) => x.addEventListener(ev, perbarui));
+});
+
+muat();
+perbarui();
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "mrpono-vo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "edge-tts-universal": "latest"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
