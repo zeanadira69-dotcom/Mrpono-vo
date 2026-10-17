@@ -204,13 +204,18 @@ async function ambil(teks, opsi, signal) {
   const kunci = [opsi.voice, opsi.rate, opsi.pitch, teks].join('|');
   if (cache.has(kunci)) return cache.get(kunci);
   let galat = 'gagal';
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 2; i++) {
+    // batas waktu 40 dtk per permintaan, tetap bisa dibatalkan manual
+    const lokal = new AbortController();
+    const dibatalkan = () => lokal.abort();
+    signal.addEventListener('abort', dibatalkan);
+    const pewaktu = setTimeout(() => lokal.abort(), 40000);
     try {
       const r = await fetch('/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-access-code': el.kode.value },
         body: JSON.stringify({ text: teks, ...opsi }),
-        signal,
+        signal: lokal.signal,
       });
       if (r.ok) {
         const buf = new Uint8Array(await r.arrayBuffer());
@@ -218,14 +223,17 @@ async function ambil(teks, opsi, signal) {
         galat = 'audio kosong';
       } else {
         const j = await r.json().catch(() => ({}));
-        galat = j.error || 'kesalahan server (' + r.status + ')';
+        galat = (j.error || 'kesalahan server (' + r.status + ')') + (j.detail ? ' [' + j.detail + ']' : '');
         if (r.status === 400 || r.status === 401 || r.status === 404) throw new Fatal(galat);
       }
     } catch (e) {
-      if (e.name === 'AbortError' || e.fatal) throw e;
-      galat = e.message;
+      if (signal.aborted || e.fatal) throw e;
+      galat = e.name === 'AbortError' ? 'server tidak merespons (waktu habis 40 detik)' : e.message;
+    } finally {
+      clearTimeout(pewaktu);
+      signal.removeEventListener('abort', dibatalkan);
     }
-    await sleep(1500 * (i + 1));
+    await sleep(1000);
   }
   throw new Error(galat);
 }
